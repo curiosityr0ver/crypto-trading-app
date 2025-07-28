@@ -1,10 +1,13 @@
 package com.curiosity.crypto.model;
 
-import com.curiosity.crypto.domain.TWO_FACTOR_AUTH;
+
+import com.curiosity.crypto.domain.VERIFICATION_TYPE;
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 @Data
+@Embeddable
 public class TwoFactorAuth {
     private boolean isEnabled = false;
-    private TWO_FACTOR_AUTH sendTo;
+    private VERIFICATION_TYPE sendTo;
 }

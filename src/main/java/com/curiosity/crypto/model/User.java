@@ -1,12 +1,8 @@
 package com.curiosity.crypto.model;
 
-import com.curiosity.crypto.domain.TWO_FACTOR_AUTH;
 import com.curiosity.crypto.domain.USER_ROLE;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -23,6 +19,8 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private TWO_FACTOR_AUTH twoFactorAuth =  TWO_FACTOR_AUTH.EMAIL;
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
+
+    @Embedded
+    private TwoFactorAuth twoFactorAuth = new TwoFactorAuth();
 }

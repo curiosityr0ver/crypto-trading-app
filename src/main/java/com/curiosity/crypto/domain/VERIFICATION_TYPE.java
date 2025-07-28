@@ -1,6 +1,6 @@
 package com.curiosity.crypto.domain;
 
-public enum TWO_FACTOR_AUTH {
+public enum VERIFICATION_TYPE {
     MOBILE,
     EMAIL
 }
