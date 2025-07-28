@@ -19,6 +19,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
     @Embedded
