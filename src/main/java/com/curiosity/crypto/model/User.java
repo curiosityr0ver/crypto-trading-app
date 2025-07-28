@@ -25,6 +25,4 @@ public class User {
 
     private TWO_FACTOR_AUTH twoFactorAuth =  TWO_FACTOR_AUTH.EMAIL;
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
-
-
 }
