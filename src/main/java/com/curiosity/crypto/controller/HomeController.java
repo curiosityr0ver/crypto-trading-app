@@ -12,4 +12,9 @@ public class HomeController {
     public String home() {
         return "Hello World!";
     }
+
+    @GetMapping("/api")
+    public String homeApi() {
+        return "Hello to API world!";
+    }
 }
