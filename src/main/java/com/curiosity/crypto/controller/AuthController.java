@@ -5,6 +5,7 @@ import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.UserRepository;
 import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.CustomerUserDetailsService;
+import com.curiosity.crypto.utils.otpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +83,14 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         String jwt = JwtProvider.generateToken(auth);
+
+        if (user.getTwoFactorAuth().isEnabled()) {
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setJwt("Two Factor Authentication is enabled");
+            authResponse.setTwoFactorAuthEnable(true);
+            String otp = otpUtils.generateOtp();
+        }
+
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setStatus(true);
