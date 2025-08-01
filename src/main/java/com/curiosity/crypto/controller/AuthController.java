@@ -7,8 +7,10 @@ import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.UserRepository;
 import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.CustomerUserDetailsService;
+import com.curiosity.crypto.service.EmailService;
 import com.curiosity.crypto.service.TwoFactorOtpService;
 import com.curiosity.crypto.utils.otpUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,9 @@ public class AuthController {
 
     @Autowired
     private TwoFactorOtpService twoFactorOtpService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/test")
     public String home() {
@@ -72,7 +77,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody User user) {
+    public ResponseEntity<AuthResponse> login(@RequestBody User user) throws MessagingException {
 
         String username = user.getEmail(), password = user.getPassword();
         Authentication auth;
@@ -100,12 +105,14 @@ public class AuthController {
 
             TwoFactorOTP oldTwoFactorOtp = twoFactorOtpService.findByUser(savedUser.getId());
 
-            if(oldTwoFactorOtp != null) {
+            if (oldTwoFactorOtp != null) {
                 twoFactorOtpService.deleteTwoFactorOtp(oldTwoFactorOtp);
 
             }
 
             TwoFactorOTP newTwoFactorOtp = twoFactorOtpService.createTwoFactorOtp(savedUser, otp, jwt);
+
+            emailService.sendVerificationOtpEmail(username, otp);
             authResponse.setSession(newTwoFactorOtp.getId());
             return new ResponseEntity<>(authResponse, HttpStatus.ACCEPTED);
         }
@@ -133,5 +140,30 @@ public class AuthController {
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<AuthResponse> verifyLoginOTP(
+            @PathVariable String otp,
+            @RequestParam String id) {
+
+        TwoFactorOTP twoFactorOtp = twoFactorOtpService.findById(otp);
+
+        if (twoFactorOtpService.verifyTwoFactorOtp(twoFactorOtp, otp)) {
+            AuthResponse authResponse = new AuthResponse();
+
+            authResponse.setStatus(true);
+            authResponse.setTwoFactorAuthEnable(true);
+            authResponse.setJwt(twoFactorOtp.getJwt());
+            authResponse.setMessage("Two Factor Authentication verified successfully");
+            return new ResponseEntity<>(authResponse, HttpStatus.OK);
+
+        }
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setStatus(false);
+        authResponse.setMessage("login failed, invalid otp");
+        return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
+
+
     }
 }
