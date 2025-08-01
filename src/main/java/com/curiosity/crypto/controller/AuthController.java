@@ -1,10 +1,13 @@
 package com.curiosity.crypto.controller;
 
 import com.curiosity.crypto.config.JwtProvider;
+import com.curiosity.crypto.model.TwoFactorAuth;
+import com.curiosity.crypto.model.TwoFactorOTP;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.UserRepository;
 import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.CustomerUserDetailsService;
+import com.curiosity.crypto.service.TwoFactorOtpService;
 import com.curiosity.crypto.utils.otpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,9 @@ public class AuthController {
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
+
+    @Autowired
+    private TwoFactorOtpService twoFactorOtpService;
 
     @GetMapping("/test")
     public String home() {
@@ -84,11 +90,24 @@ public class AuthController {
 
         String jwt = JwtProvider.generateToken(auth);
 
+        User savedUser = userRepository.findByEmail(user.getEmail());
+
         if (user.getTwoFactorAuth().isEnabled()) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setJwt("Two Factor Authentication is enabled");
             authResponse.setTwoFactorAuthEnable(true);
             String otp = otpUtils.generateOtp();
+
+            TwoFactorOTP oldTwoFactorOtp = twoFactorOtpService.findByUser(savedUser.getId());
+
+            if(oldTwoFactorOtp != null) {
+                twoFactorOtpService.deleteTwoFactorOtp(oldTwoFactorOtp);
+
+            }
+
+            TwoFactorOTP newTwoFactorOtp = twoFactorOtpService.createTwoFactorOtp(savedUser, otp, jwt);
+            authResponse.setSession(newTwoFactorOtp.getId());
+            return new ResponseEntity<>(authResponse, HttpStatus.ACCEPTED);
         }
 
         AuthResponse authResponse = new AuthResponse();
