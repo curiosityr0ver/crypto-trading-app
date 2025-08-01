@@ -71,7 +71,7 @@ public class AuthController {
         Authentication auth;
         try {
             auth = authenticate(username, password);
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setStatus(false);
             authResponse.setMessage(e.getMessage());
