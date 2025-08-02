@@ -142,7 +142,7 @@ public class AuthController {
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
     }
 
-    @PostMapping("/")
+    @PostMapping("/two-factor/otp/{otp}")
     public ResponseEntity<AuthResponse> verifyLoginOTP(
             @PathVariable String otp,
             @RequestParam String id) {
