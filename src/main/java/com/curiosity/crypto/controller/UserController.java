@@ -1,15 +1,22 @@
 package com.curiosity.crypto.controller;
 
+import com.curiosity.crypto.ForgotPasswordTokenRequest;
 import com.curiosity.crypto.domain.VERIFICATION_TYPE;
+import com.curiosity.crypto.model.ForgotPasswordToken;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.model.VerificationCode;
+import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.EmailService;
+import com.curiosity.crypto.service.ForgotPasswordService;
 import com.curiosity.crypto.service.UserService;
 import com.curiosity.crypto.service.VerificationCodeService;
+import com.curiosity.crypto.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -20,6 +27,10 @@ public class UserController {
     private EmailService emailService;
     @Autowired
     private VerificationCodeService verificationCodeService;
+
+    @Autowired
+    private ForgotPasswordService forgotPasswordService;
+
     private String jwt;
 
     @GetMapping("/api/users/profile")
@@ -74,6 +85,33 @@ public class UserController {
         }
         throw new Exception("Invalid otp");
     }
+
+    @PostMapping("/auth/users/reset-password/send-otp")
+    public ResponseEntity<AuthResponse> sendForgotPasswordOtp(
+            @RequestBody ForgotPasswordTokenRequest req
+            ) throws Exception {
+        User user = userService.findUserByEmail(req.getSendTo());
+        String otp = OtpUtils.generateOtp();
+        UUID uuid = UUID.randomUUID();
+        String id =  uuid.toString();
+
+        ForgotPasswordToken token = forgotPasswordService.findByUser(user.getId());
+
+        if(token == null) {
+            token = forgotPasswordService.createToken(user, id, otp, req.getVerificationType(), req.getSendTo());
+        }
+        if(req.getVerificationType().equals(VERIFICATION_TYPE.EMAIL)) {
+            emailService.sendVerificationOtpEmail(user.getEmail(), token.getOtp());
+        }
+        AuthResponse response = new AuthResponse();
+
+        response.setSession(token.getId());
+        response.setMessage("Password reset OTP sent successfully");
+
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 
 }
