@@ -5,6 +5,8 @@ import com.curiosity.crypto.domain.VERIFICATION_TYPE;
 import com.curiosity.crypto.model.ForgotPasswordToken;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.model.VerificationCode;
+import com.curiosity.crypto.request.ResetPasswordRequest;
+import com.curiosity.crypto.respose.ApiResponse;
 import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.EmailService;
 import com.curiosity.crypto.service.ForgotPasswordService;
@@ -112,6 +114,26 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/auth/users/reset-password/verify-otp")
+    public ResponseEntity<ApiResponse> resetPasswordOtp(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ResetPasswordRequest req,
+            @RequestParam String id
+    ) throws Exception {
+        User user = userService.findUserByJwt(jwt);
+        ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findById(id);
 
+        boolean isVerified = forgotPasswordToken.getOtp().equals(req.getOtp());
+
+        if (isVerified) {
+            userService.updatePassword(forgotPasswordToken.getUser(), req.getPassword());
+
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.setMessage("Password updated successfully");
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
+        }
+        throw new Exception("Invalid otp");
+    } 
 
 }
