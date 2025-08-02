@@ -1,7 +1,6 @@
 package com.curiosity.crypto.controller;
 
 import com.curiosity.crypto.config.JwtProvider;
-import com.curiosity.crypto.model.TwoFactorAuth;
 import com.curiosity.crypto.model.TwoFactorOTP;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.UserRepository;
@@ -9,7 +8,7 @@ import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.CustomerUserDetailsService;
 import com.curiosity.crypto.service.EmailService;
 import com.curiosity.crypto.service.TwoFactorOtpService;
-import com.curiosity.crypto.utils.otpUtils;
+import com.curiosity.crypto.utils.OtpUtils;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -101,7 +100,7 @@ public class AuthController {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setJwt("Two Factor Authentication is enabled");
             authResponse.setTwoFactorAuthEnable(true);
-            String otp = otpUtils.generateOtp();
+            String otp = OtpUtils.generateOtp();
 
             TwoFactorOTP oldTwoFactorOtp = twoFactorOtpService.findByUser(savedUser.getId());
 

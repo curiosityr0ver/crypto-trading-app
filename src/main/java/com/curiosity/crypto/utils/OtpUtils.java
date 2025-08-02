@@ -1,9 +1,8 @@
 package com.curiosity.crypto.utils;
 
-import java.util.Date;
 import java.util.Random;
 
-public class otpUtils {
+public class OtpUtils {
     static final int OTP_LENGTH = 6;
 
     public static String generateOtp() {
