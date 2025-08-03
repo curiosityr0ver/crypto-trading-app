@@ -1,5 +1,6 @@
 package com.curiosity.crypto.service;
 
+import com.curiosity.crypto.domain.ORDER_TYPE;
 import com.curiosity.crypto.model.Order;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.model.Wallet;
@@ -19,7 +20,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getUserWallet(User user) {
         Wallet wallet = walletRepository.findByUserId(user.getId());
-        if(wallet == null){
+        if (wallet == null) {
             wallet = new Wallet();
             wallet.setUser(user);
             walletRepository.save(wallet);
@@ -39,7 +40,7 @@ public class WalletServiceImpl implements WalletService {
     public Wallet findWalletById(Long id) throws Exception {
         Optional<Wallet> wallet = walletRepository.findById(id);
 
-        if(wallet.isPresent()){
+        if (wallet.isPresent()) {
             return wallet.get();
         }
         throw new Exception("Wallet Not Found !");
@@ -49,7 +50,7 @@ public class WalletServiceImpl implements WalletService {
     public Wallet walletToWalletTransfer(User sender, Wallet receiverWallet, Long amount) throws Exception {
         Wallet senderWallet = getUserWallet(sender);
 
-        if(senderWallet.getBalance().compareTo(BigDecimal.valueOf(amount)) < 0){
+        if (senderWallet.getBalance().compareTo(BigDecimal.valueOf(amount)) < 0) {
             throw new Exception("Insufficient Balance...");
         }
         BigDecimal newBalance = senderWallet.getBalance().subtract(BigDecimal.valueOf(amount));
@@ -63,9 +64,20 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet payOrderPayment(Order order, User user) {
+    public Wallet payOrderPayment(Order order, User user) throws Exception {
         Wallet wallet = getUserWallet(user);
 
-//        if(order.getOrder())
+        if (order.getOrderType().equals(ORDER_TYPE.BUY)) {
+            if (wallet.getBalance().subtract(order.getPrice()).compareTo(BigDecimal.ZERO) < 0) {
+                throw new Exception("Insufficient funds for this transaction !");
+            }
+            BigDecimal newBalance = wallet.getBalance().subtract(order.getPrice());
+
+            wallet.setBalance(newBalance);
+            walletRepository.save(wallet);
+            return wallet;
+        } else {
+            return null;
+        }
     }
 }
