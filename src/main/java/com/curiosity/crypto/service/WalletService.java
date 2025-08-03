@@ -1,5 +1,6 @@
 package com.curiosity.crypto.service;
 
+import com.curiosity.crypto.model.Order;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.model.Wallet;
 
