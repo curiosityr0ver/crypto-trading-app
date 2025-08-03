@@ -6,13 +6,13 @@ import com.curiosity.crypto.model.VerificationCode;
 
 public interface VerificationCodeService {
 
-    VerificationCode sendVerificationCode(User user, VERIFICATION_TYPE verificationType);
+    VerificationCode sendVerificationOTP(User user, VERIFICATION_TYPE verificationType);
 
-    VerificationCode getVerificationCodeById(Long id);
+    VerificationCode findVerificationById(Long id) throws Exception;
 
-    VerificationCode getVerificationCodeByUser(Long userId);
+    VerificationCode findUsersVerification(User user) throws Exception;
 
-    void deleteVerificationCodeById(VerificationCode verificationCode);
+    Boolean VerifyOtp(String opt, VerificationCode verificationCode);
 
-    Boolean verifyVerificationCode(VerificationCode verificationCode);
+    void deleteVerification(VerificationCode verificationCode);
 }

@@ -18,32 +18,37 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
 
 
     @Override
-    public VerificationCode sendVerificationCode(User user, VERIFICATION_TYPE verificationType) {
-        VerificationCode verificationCode1 = new VerificationCode();
+    public VerificationCode sendVerificationOTP(User user, VERIFICATION_TYPE verificationType) {
+        VerificationCode verificationCode = new VerificationCode();
 
-        verificationCode1.setOtp(OtpUtils.generateOtp());
-        verificationCode1.setVerificationType(verificationType);
-        verificationCode1.setUser(user);
-
-        return verificationCodeRepository.save(verificationCode1);
+        verificationCode.setOtp(OtpUtils.generateOtp());
+        verificationCode.setUser(user);
+        verificationCode.setVerificationType(verificationType);
+        return verificationCodeRepository.save(verificationCode);
     }
 
     @Override
-    public VerificationCode getVerificationCodeById(Long id) {
-        Optional<VerificationCode> verificationCodeOptional = verificationCodeRepository.findById(id);
-        if(verificationCodeOptional.isPresent()) {
-            return verificationCodeOptional.get();
+    public VerificationCode findVerificationById(Long id) throws Exception {
+        Optional<VerificationCode> verificationCode = verificationCodeRepository.findById(id);
+
+        if (verificationCode.isEmpty()) {
+            throw new Exception("Verification code not found");
         }
-        throw new RuntimeException("Verification Code Not Found");
+        return verificationCode.get();
     }
 
     @Override
-    public VerificationCode getVerificationCodeByUser(Long userId) {
-        return verificationCodeRepository.findByUserId(userId);
+    public VerificationCode findUsersVerification(User user) throws Exception {
+        return verificationCodeRepository.findByUserId(user.getId());
     }
 
     @Override
-    public void deleteVerificationCodeById(VerificationCode verificationCode) {
+    public Boolean VerifyOtp(String opt, VerificationCode verificationCode) {
+       return opt.equals(verificationCode.getOtp());
+    }
+
+    @Override
+    public void deleteVerification(VerificationCode verificationCode) {
         verificationCodeRepository.delete(verificationCode);
     }
 }

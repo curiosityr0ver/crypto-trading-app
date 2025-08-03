@@ -3,10 +3,13 @@ package com.curiosity.crypto.model;
 import com.curiosity.crypto.domain.ORDER_STATUS;
 import com.curiosity.crypto.domain.ORDER_TYPE;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
+@Entity
 public class Order {
 
     @Id
@@ -16,7 +19,7 @@ public class Order {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @Column(nullable = false)
     private ORDER_TYPE orderType;
 
     @Column(nullable = false)
