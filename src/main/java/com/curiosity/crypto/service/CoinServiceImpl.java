@@ -145,7 +145,7 @@ public class CoinServiceImpl implements CoinService {
     }
 
     @Override
-    public String GetTrendingCoins() throws Exception {
+    public String getTrendingCoins() throws Exception {
         String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/search/trending";
 
         RestTemplate restTemplate = new RestTemplate();
