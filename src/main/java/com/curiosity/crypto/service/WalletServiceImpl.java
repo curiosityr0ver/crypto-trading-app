@@ -66,6 +66,6 @@ public class WalletServiceImpl implements WalletService {
     public Wallet payOrderPayment(Order order, User user) {
         Wallet wallet = getUserWallet(user);
 
-
+//        if(order.getOrder())
     }
 }
