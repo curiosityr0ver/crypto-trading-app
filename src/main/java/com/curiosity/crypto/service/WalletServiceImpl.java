@@ -3,7 +3,9 @@ package com.curiosity.crypto.service;
 import com.curiosity.crypto.model.Order;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.model.Wallet;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getUserWallet(User user) {
