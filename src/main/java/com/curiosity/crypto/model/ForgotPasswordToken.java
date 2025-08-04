@@ -10,7 +10,6 @@ import lombok.Generated;
 public class ForgotPasswordToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     @OneToOne(cascade = CascadeType.ALL)

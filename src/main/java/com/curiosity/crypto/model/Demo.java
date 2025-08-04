@@ -2,23 +2,11 @@ package com.curiosity.crypto.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name="coins")
-public class Coin {
+public class Demo {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
@@ -35,16 +23,16 @@ public class Coin {
     private double currentPrice;
 
     @JsonProperty("market_cap")
-    private double marketCap;
+    private long marketCap;
 
     @JsonProperty("market_cap_rank")
-    private double marketCapRank;
+    private int marketCapRank;
 
     @JsonProperty("fully_diluted_valuation")
-    private boolean fullyDilutedValuation;
+    private long fullyDilutedValuation;
 
     @JsonProperty("total_volume")
-    private double totalVolume;
+    private long totalVolume;
 
     @JsonProperty("high_24h")
     private double high24h;
@@ -59,25 +47,28 @@ public class Coin {
     private double priceChangePercentage24h;
 
     @JsonProperty("market_cap_change_24h")
-    private double marketCapChange24h;
+    private long marketCapChange24h;
 
     @JsonProperty("market_cap_change_percentage_24h")
     private double marketCapChangePercentage24h;
 
     @JsonProperty("circulating_supply")
-    private double circulatingSupply;
+    private long circulatingSupply;
 
     @JsonProperty("total_supply")
-    private double totalSupply;
+    private long totalSupply;
 
     @JsonProperty("max_supply")
-    private double maxSupply;
+    private long maxSupply;
 
     @JsonProperty("ath")
     private double ath;
 
+    @JsonProperty("ath_change_percentage")
+    private double athChangePercentage;
+
     @JsonProperty("ath_date")
-    private double athDate;
+    private Date athDate;
 
     @JsonProperty("atl")
     private double atl;
@@ -90,9 +81,8 @@ public class Coin {
 
     @JsonProperty("roi")
     @JsonIgnore
-    private double roi;
+    private String roi;
 
     @JsonProperty("last_updated")
     private Date lastUpdated;
-
 }
