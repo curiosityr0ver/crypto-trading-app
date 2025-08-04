@@ -2,10 +2,7 @@ package com.curiosity.crypto.service;
 
 import com.curiosity.crypto.domain.ORDER_STATUS;
 import com.curiosity.crypto.domain.ORDER_TYPE;
-import com.curiosity.crypto.model.Coin;
-import com.curiosity.crypto.model.Order;
-import com.curiosity.crypto.model.OrderItem;
-import com.curiosity.crypto.model.User;
+import com.curiosity.crypto.model.*;
 import com.curiosity.crypto.repository.OrderItemRepository;
 import com.curiosity.crypto.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -102,19 +99,33 @@ public class OrderServiceImpl implements OrderService {
         Order order = createOrder(user, orderItem, ORDER_TYPE.SELL);
         orderItem.setOrder(order);
 
-        walletService.payOrderPayment(order, user);
+        if(assetToSell.getQuantity()>=quantity){
+            order.setStatus(ORDER_STATUS.SUCCESS);
+            order.setOrderType(ORDER_TYPE.SELL);
 
-        order.setStatus(ORDER_STATUS.SUCCESS);
-        order.setOrderType(ORDER_TYPE.BUY);
+            Order savedOrder = orderRepository.save(order);
 
-        Order savedOrder = orderRepository.save(order);
+            walletService.payOrderPayment(order, user);
+            Asset updatedAsset = assetService.updateAsset(assetToSell.get(Id), -quantity);
+            if(updatedAsset.getQuantity()*coin.getCurrentPrice()<=1){
+               assetService.deleteAsset(updatedAsset.getId());
+            }
+            return savedOrder;
 
-//        create assets
-        return savedOrder;
+        }
+
+        throw new IllegalArgumentException("Insufficient quantity to sell");
     }
 
     @Override
-    public Order processOrder(Coin coin, double quantity, ORDER_TYPE orderType, User user) {
-        return null;
+    @Transactional
+    public Order processOrder(Coin coin, double quantity, ORDER_TYPE orderType, User user) throws Exception {
+        if(orderType.equals(ORDER_TYPE.BUY)){
+            return buyAsset(coin,quantity,user);
+        }else if(orderType.equals(ORDER_TYPE.SELL)){
+            return sellAsset(coin, quantity, user);
+        }
+
+        throw new IllegalArgumentException("Invalid order type");
     }
 }
