@@ -1,27 +1,27 @@
 package com.curiosity.crypto.model;
 
-import com.curiosity.crypto.domain.PAYMENT_METHOD;
-import com.curiosity.crypto.domain.PAYMENT_ORDER_STATUS;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class PaymentOrder {
+public class TrendingHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long amount;
+    private double sellingPrice;
 
-    private PAYMENT_ORDER_STATUS status = PAYMENT_ORDER_STATUS.PENDING;
+    private double buyingPrice;
 
-    private PAYMENT_METHOD paymentMethod;
+//    fix later
+    @ManyToOne
+    private Coin coin;
 
     @ManyToOne
     private User user;
