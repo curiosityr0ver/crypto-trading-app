@@ -6,6 +6,7 @@ import com.curiosity.crypto.model.WalletTransaction;
 import com.curiosity.crypto.model.Withdrawal;
 import com.curiosity.crypto.service.UserService;
 import com.curiosity.crypto.service.WalletService;
+import com.curiosity.crypto.service.WalletTransactionService;
 import com.curiosity.crypto.service.WithdrawalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class WithdrawalController {
     private WalletTransactionService walletTransactionService;
 
     @PostMapping("/api/withdrawal/{amount}")
-    public ResponseEntity<?> withdrawalRequest(
+    public ResponseEntity<WalletTransaction> withdrawalRequest(
             @PathVariable Long amount,
             @RequestHeader("Authorization")String jwt) throws Exception {
         User user=userService.findUserByJwt(jwt);
@@ -46,7 +47,7 @@ public class WithdrawalController {
                 withdrawal.getAmount()
         );
 
-        return new ResponseEntity<>(withdrawal, HttpStatus.OK);
+        return new ResponseEntity<>(walletTransaction, HttpStatus.OK);
     }
 
     @PatchMapping("/api/admin/withdrawal/{id}/proceed/{accept}")
