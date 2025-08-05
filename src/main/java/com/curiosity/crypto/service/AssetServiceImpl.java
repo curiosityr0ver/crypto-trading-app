@@ -4,6 +4,7 @@ import com.curiosity.crypto.model.Asset;
 import com.curiosity.crypto.model.Coin;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.AssetsRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -15,12 +16,19 @@ public class AssetServiceImpl implements AssetService {
     private AssetsRepository assetsRepository;
     @Override
     public Asset createAsset(User user, Coin coin, double quantity) {
-        return null;
+        Asset asset = new Asset();
+        asset.setUser(user);
+        asset.setCoin(coin);
+        asset.setQuantity(quantity);
+        asset.setBuyPrice(coin.getCurrentPrice());
+        return assetsRepository.save(asset);
     }
 
     @Override
     public Asset getAssetById(Long assetId) {
-        return null;
+        return  assetsRepository
+                .findById(assetId)
+                .orElseThrow(() -> new EntityNotFoundException("Asset not found"));
     }
 
     @Override
@@ -30,21 +38,23 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public List<Asset> getUserAssets(Long userId) {
-        return List.of();
+        return assetsRepository.findByUserId(userId);
     }
 
     @Override
-    public Asset updateAsset(Long assetId, double quantity) {
-        return null;
+    public Asset updateAsset(Long assetId, double quantity) throws Exception {
+        Asset oldAsset = getAssetById(assetId);
+        oldAsset.setQuantity(quantity+oldAsset.getQuantity());
+        return assetsRepository.save(oldAsset);
     }
 
     @Override
     public Asset findAssetByUserIdAndCoinId(Long userId, String coinId) {
-        return null;
+            assetsRepository.findByUserIdAndCoinId(userId, coinId);
     }
 
     @Override
     public void deleteAsset(Long assetId) {
-
+        assetsRepository.deleteById(assetId);
     }
 }
