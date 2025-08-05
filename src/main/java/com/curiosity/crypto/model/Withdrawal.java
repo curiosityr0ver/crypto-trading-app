@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Withdrawal {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private WITHDRAWAL_STATUS status;

@@ -6,9 +6,11 @@ import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.AssetsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AssetServiceImpl implements AssetService {
 
 
@@ -42,7 +44,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public Asset updateAsset(Long assetId, double quantity) throws Exception {
+    public Asset updateAsset(Long assetId, double quantity) {
         Asset oldAsset = getAssetById(assetId);
         oldAsset.setQuantity(quantity+oldAsset.getQuantity());
         return assetsRepository.save(oldAsset);
@@ -50,7 +52,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Asset findAssetByUserIdAndCoinId(Long userId, String coinId) {
-            assetsRepository.findByUserIdAndCoinId(userId, coinId);
+            return assetsRepository.findByUserIdAndCoinId(userId, coinId);
     }
 
     @Override
