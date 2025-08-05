@@ -27,8 +27,8 @@ public class OrderController {
     @Autowired
     private CoinService coinService;
 
-    @Autowired
-    private WalletTransactionService walletTransactionService;
+//    @Autowired
+//    private WalletTransactionService walletTransactionService;
 
 //    private
 
@@ -39,8 +39,9 @@ public class OrderController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity<Order> payOrderPayment(@RequestHeader("Authorization") String jwt, @RequestBody CreateOrderRequest req
-
+    public ResponseEntity<Order> payOrderPayment(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody CreateOrderRequest req
     ) throws Exception {
         User user = userService.findUserByJwt(jwt);
         Coin coin = coinService.findById(req.getCoinId());
@@ -53,7 +54,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@RequestHeader("Authorization") String jwtToken, @PathVariable Long orderId) throws Exception {
+    public ResponseEntity<Order> getOrderById(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable Long orderId) throws Exception {
         if (jwtToken == null) {
             throw new Exception("token missing...");
         }
@@ -72,7 +75,8 @@ public class OrderController {
     public ResponseEntity<List<Order>> getAllOrdersForUser(
             @RequestHeader("Authorization") String jwtToken,
             @RequestParam(required = false) ORDER_TYPE order_type,
-            @RequestParam(required = false) String asset_symbol) throws Exception {
+            @RequestParam(required = false) String asset_symbol
+    ) throws Exception {
         if (jwtToken == null) {
             throw new Exception("token missing...");
         }
