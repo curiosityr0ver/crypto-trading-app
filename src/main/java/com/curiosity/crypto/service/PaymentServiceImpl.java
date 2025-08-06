@@ -1,10 +1,18 @@
 package com.curiosity.crypto.service;
 
+import com.curiosity.crypto.domain.PAYMENT_METHOD;
 import com.curiosity.crypto.domain.PAYMENT_ORDER_STATUS;
 import com.curiosity.crypto.model.PaymentOrder;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.repository.PaymentOrderRepository;
 import com.curiosity.crypto.respose.PaymentResponse;
+import com.razorpay.Payment;
+import com.razorpay.PaymentLink;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.mail.Session;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService{
 
 
     @Override
-    public PaymentOrder createOrder(User user, Long amount, PaymentMethod paymentMethod) {
+    public PaymentOrder createOrder(User user, Long amount, PAYMENT_METHOD paymentMethod) {
         PaymentOrder order=new PaymentOrder();
         order.setUser(user);
         order.setAmount(amount);
@@ -50,10 +58,10 @@ public class PaymentServiceImpl implements PaymentService{
     }
 
     @Override
-    public Boolean ProccedPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
+    public Boolean ProcessPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
         if(paymentOrder.getStatus().equals(PAYMENT_ORDER_STATUS.PENDING)){
 
-            if(paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)){
+            if(paymentOrder.getPaymentMethod().equals(PAYMENT_METHOD.RAZORPAY)){
                 RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecret);
                 Payment payment = razorpay.payments.fetch(paymentId);
 
@@ -61,7 +69,6 @@ public class PaymentServiceImpl implements PaymentService{
                 String status = payment.get("status");
                 if(status.equals("captured")){
                     paymentOrder.setStatus(PAYMENT_ORDER_STATUS.SUCCESS);
-
                     return true;
                 }
                 paymentOrder.setStatus(PAYMENT_ORDER_STATUS.FAILED);
@@ -69,9 +76,8 @@ public class PaymentServiceImpl implements PaymentService{
                 return false;
             }
             paymentOrder.setStatus(PAYMENT_ORDER_STATUS.SUCCESS);
-            paymentOrderRepository.save(paymentOrder);
-            paymentOrderRepository.save(paymentOrder);
-            return true;
+            paymentOrderRepository.save(paymentOrder);return true;
+
         }
 
         return false;

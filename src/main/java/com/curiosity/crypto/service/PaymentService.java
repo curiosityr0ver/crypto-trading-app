@@ -4,6 +4,8 @@ import com.curiosity.crypto.domain.PAYMENT_METHOD;
 import com.curiosity.crypto.model.PaymentOrder;
 import com.curiosity.crypto.model.User;
 import com.curiosity.crypto.respose.PaymentResponse;
+import com.razorpay.RazorpayException;
+import com.stripe.exception.StripeException;
 
 public interface PaymentService {
 
@@ -11,7 +13,7 @@ public interface PaymentService {
 
     PaymentOrder getPaymentOrderById(Long id) throws Exception;
 
-    Boolean ProccedPaymentOrder (PaymentOrder paymentOrder,
+    Boolean ProcessPaymentOrder (PaymentOrder paymentOrder,
                                  String paymentId) throws RazorpayException;
 
     PaymentResponse createRazorpayPaymentLink(User user,
