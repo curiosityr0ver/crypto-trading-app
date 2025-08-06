@@ -15,18 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/watchlist")
 public class WatchlistController {
-    private final WatchlistService watchlistService;
-    private final UserService userService;
+
+    @Autowired
+    private  WatchlistService watchlistService;
+
+    @Autowired
+    private  UserService userService;
 
     @Autowired
     private CoinService coinService;
 
-    @Autowired
-    public WatchlistController(WatchlistService watchlistService,
-                               UserService userService) {
-        this.watchlistService = watchlistService;
-        this.userService=userService;
-    }
+
 
     @GetMapping("/user")
     public ResponseEntity<Watchlist> getUserWatchlist(
