@@ -1,7 +1,6 @@
 package com.curiosity.crypto.controller;
 
 import com.curiosity.crypto.model.*;
-import com.curiosity.crypto.respose.PaymentResponse;
 import com.curiosity.crypto.service.OrderService;
 import com.curiosity.crypto.service.PaymentService;
 import com.curiosity.crypto.service.UserService;
@@ -37,7 +36,7 @@ public class WalletController {
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/${walletId}/transfer")
+    @PutMapping("/{walletId}/transfer")
     public ResponseEntity<Wallet> walletToWalletTransfer(
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long walletId,
