@@ -142,6 +142,7 @@ public class CoinServiceImpl implements CoinService {
     public String getTop50CoinsByMarketCapRank() throws Exception {
 
 
+        return "";
     }
 
     @Override
@@ -151,7 +152,6 @@ public class CoinServiceImpl implements CoinService {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-//            HttpHeaders headers = new HttpHeaders();
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 

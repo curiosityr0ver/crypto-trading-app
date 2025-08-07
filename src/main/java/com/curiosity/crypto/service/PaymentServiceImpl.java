@@ -56,7 +56,7 @@ public class PaymentServiceImpl implements PaymentService{
     }
 
     @Override
-    public Boolean ProcessPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
+    public Boolean proceedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException {
         if(paymentOrder.getStatus().equals(PAYMENT_ORDER_STATUS.PENDING)){
 
             if(paymentOrder.getPaymentMethod().equals(PAYMENT_METHOD.RAZORPAY)){

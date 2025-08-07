@@ -51,10 +51,10 @@ public class UserController {
     ) throws Exception {
         User user = userService.findUserByJwt(jwt);
 
-        VerificationCode verificationCode = verificationCodeService.getVerificationCodeByUser(user.getId());
+        VerificationCode verificationCode = verificationCodeService.findVerificationById(user.getId());
 
         if (verificationCode == null) {
-            verificationCode = verificationCodeService.sendVerificationCode(user, verificationType);
+            verificationCode = verificationCodeService.sendVerificationOTP(user, verificationType);
         }
         if (verificationType.equals(VERIFICATION_TYPE.EMAIL)) {
             emailService.sendVerificationOtpEmail(user.getEmail(), verificationCode.getOtp());
@@ -70,7 +70,7 @@ public class UserController {
             @PathVariable String otp
     ) throws Exception {
         User user = userService.findUserByJwt(jwt);
-        VerificationCode verificationCode = verificationCodeService.getVerificationCodeByUser(user.getId());
+        VerificationCode verificationCode = verificationCodeService.findUsersVerification(user);
 
         String sendTo = verificationCode.getVerificationType().equals(VERIFICATION_TYPE.EMAIL) ?
                 verificationCode.getEmail() :
@@ -82,7 +82,7 @@ public class UserController {
             User updatedUser = userService.enableTwoFactorAuthentication(
                     verificationCode.getVerificationType(), sendTo, user);
 
-            verificationCodeService.deleteVerificationCodeById(verificationCode);
+            verificationCodeService.deleteVerification(verificationCode);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
         throw new Exception("Invalid otp");
