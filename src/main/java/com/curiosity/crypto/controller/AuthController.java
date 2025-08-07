@@ -8,6 +8,7 @@ import com.curiosity.crypto.respose.AuthResponse;
 import com.curiosity.crypto.service.CustomerUserDetailsService;
 import com.curiosity.crypto.service.EmailService;
 import com.curiosity.crypto.service.TwoFactorOtpService;
+import com.curiosity.crypto.service.WatchlistService;
 import com.curiosity.crypto.utils.OtpUtils;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private WatchlistService watchlistService;
+
     @GetMapping("/test")
     public String home() {
         return "Hello World!";
@@ -57,6 +61,8 @@ public class AuthController {
 
         User savedUser = userRepository.save(newUser);
 
+        watchlistService.createWatchList(savedUser);
+
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(), user.getPassword()
         );
@@ -72,7 +78,6 @@ public class AuthController {
         authResponse.setMessage("registered successfully");
 
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
-//         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

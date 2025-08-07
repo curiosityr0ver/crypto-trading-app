@@ -47,10 +47,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-//                change to runtime exception
                 System.out.println("**Invalid JWT token**");
-//                throw new ServletException(e);
-//                throw new RuntimeException("invalid token...");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().println("Invalid JWT token");
                 return;
