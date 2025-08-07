@@ -32,32 +32,14 @@ public class CoinServiceImpl implements CoinService
 
 	public List<Coin> getCoinList(int page) throws Exception 
 	{
-		String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page="+page ;
-	
-		RestTemplate restTemplate = new RestTemplate();
-		
-		try
-		{
-			HttpHeaders headers = new HttpHeaders();
-			
-			HttpEntity<String> entity = new HttpEntity<>("parameters",headers);
-			
-			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-			
-			List<Coin> coinList = objectMapper.readValue(response.getBody(), 
-									new TypeReference<List<Coin>>() {});
-			
-			return coinList;
-		}
-		catch(HttpClientErrorException  | HttpServerErrorException e)
-		{
-			throw new Exception(e.getMessage());
-		}
-		
-		
+		return getCoins(page, objectMapper);
+
+
 	}
 
-	
+
+
+
 	public String getMarketChart(String coinId, int days) throws Exception 
 	{
 		
@@ -67,25 +49,7 @@ public class CoinServiceImpl implements CoinService
 		return getString(url);
 	}
 
-	public static String getString(String url) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
 
-		try
-		{
-			HttpHeaders headers = new HttpHeaders();
-
-			HttpEntity<String> entity = new HttpEntity<>("parameters",headers);
-
-			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-
-			return response.getBody();
-		}
-		catch(HttpClientErrorException | HttpServerErrorException e)
-		{
-			throw new Exception(e.getMessage());
-		}
-	}
 
 
 	public String getCoinDetails(String coinId) throws Exception 
@@ -119,11 +83,11 @@ public class CoinServiceImpl implements CoinService
 			coin.setTotalVolume(marketData.get("total_volume").get("usd").asLong());
 			coin.setHigh24h(marketData.get("high_24h").get("usd").asDouble());
 			coin.setLow24h(marketData.get("low_24h").get("usd").asDouble());
-//			coin.setPriceChange24h(marketData.get("price_change_24h").asDouble());
-//			coin.setPriceChangePercentage24h(marketData.get("price_change_percentage_24h").asDouble());
-//			coin.setMarketCapChange24h(marketData.get("market_cap_change_24h").asLong());
-//			coin.setMarketCapChangePercentage24h(marketData.get("market_cap_change_percentage_24h").asLong());
-//			coin.setTotalSupply(marketData.get("total_supply").asLong());
+			coin.setPriceChange24h(marketData.get("price_change_24h").asDouble());
+			coin.setPriceChangePercentage24h(marketData.get("price_change_percentage_24h").asDouble());
+			coin.setMarketCapChange24h(marketData.get("market_cap_change_24h").asLong());
+			coin.setMarketCapChangePercentage24h(marketData.get("market_cap_change_percentage_24h").asLong());
+			coin.setTotalSupply(marketData.get("total_supply").asLong());
 			
 			coinRepository.save(coin);
 			
@@ -173,6 +137,49 @@ public class CoinServiceImpl implements CoinService
 		String url = "https://api.coingecko.com/api/v3/search/trending";
 
 		return getString(url);
+	}
+
+	public static String getString(String url) throws Exception {
+		RestTemplate restTemplate = new RestTemplate();
+
+		try
+		{
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> entity = new HttpEntity<>("parameters",headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+
+			return response.getBody();
+		}
+		catch(HttpClientErrorException | HttpServerErrorException e)
+		{
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	public static List<Coin> getCoins(int page, ObjectMapper objectMapper) throws Exception {
+		String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page="+page ;
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		try
+		{
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> entity = new HttpEntity<>("parameters",headers);
+
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+			return objectMapper.readValue(response.getBody(),
+					new TypeReference<>() {
+					});
+		}
+		catch(HttpClientErrorException | HttpServerErrorException e)
+		{
+			throw new Exception(e.getMessage());
+		}
 	}
 
 }

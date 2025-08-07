@@ -28,35 +28,37 @@ public class CoinServiceImpl implements CoinService {
 
     @Override
     public List<Coin> getCoins(int page) throws Exception {
-        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page="+page;
+        String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page=" + page;
 
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-//            HttpHeaders headers = new HttpHeaders();
             HttpHeaders headers = new HttpHeaders();
+
             HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(coinGeckoApiUrl, HttpMethod.GET, entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-            return objectMapper.readValue(response.getBody(), new TypeReference<>() {
-            });
+            return objectMapper.readValue(response.getBody(),
+                    new TypeReference<List<Coin>>() {
+                    });
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new Exception(e.getMessage());
         }
+
 
     }
 
     @Override
     public String getMarketChart(String coinId, int days) throws Exception {
-        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/"+coinId+"/market_chart?vs_currency=usd&days="+days;
+        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/" + coinId + "/market_chart?vs_currency=usd&days=" + days;
 
         return getString(coinGeckoApiUrl);
     }
 
     @Override
     public String getCoinDetails(String coinId) throws Exception {
-        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/"+coinId;
+        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/" + coinId;
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -100,16 +102,16 @@ public class CoinServiceImpl implements CoinService {
     public Coin findById(String coinId) throws Exception {
         Optional<Coin> coin = coinRepository.findById(coinId);
 
-        if(coin.isPresent()) {
+        if (coin.isPresent()) {
             return coin.get();
-        }else {
+        } else {
             throw new Exception("Coin not found");
         }
     }
 
     @Override
     public String searchCoin(String keyword) throws Exception {
-        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/search?query="+keyword;
+        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/search?query=" + keyword;
 
         return getString(coinGeckoApiUrl);
 
@@ -117,9 +119,9 @@ public class CoinServiceImpl implements CoinService {
 
     @Override
     public String getTop50CoinsByMarketCapRank() throws Exception {
+        String coinGeckoApiUrl = "https://api.coingecko.com/api/v3/coins/markets/vs_currency=usd&per_page=50&page=1";
 
-
-        return "";
+        return getString(coinGeckoApiUrl);
     }
 
     @Override
@@ -130,6 +132,13 @@ public class CoinServiceImpl implements CoinService {
     }
 
     private String getString(String coinGeckoApiUrl) throws Exception {
-        return getString(coinGeckoApiUrl);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(coinGeckoApiUrl, HttpMethod.GET, entity, String.class);
+
+        return response.getBody();
     }
 }
