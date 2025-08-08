@@ -16,7 +16,7 @@ import com.trading.response.PaymentResponse;
 import com.trading.service.PaymentService;
 import com.trading.service.UserService;
 
-@RequestMapping("/api")
+@RequestMapping("/api/payment")
 @RestController
 public class PaymentController 
 {
@@ -28,7 +28,7 @@ public class PaymentController
 	private PaymentService paymentService;
 	
 	
-	@PostMapping("/api/payment/{paymentMethod}/amount/{amount}")
+	@PostMapping("/{paymentMethod}/amount/{amount}")
 	public ResponseEntity<PaymentResponse> paymentHandler(
 									@PathVariable PaymentMethod paymentMethod,
 									@PathVariable Long amount,
@@ -44,7 +44,7 @@ public class PaymentController
 		
 		if (paymentMethod.equals(PaymentMethod.RAZORPAY))
 		{
-			paymentResponse = paymentService.createRazorpayPaymentLink(user, amount);
+			paymentResponse = paymentService.createRazorpayPaymentLink(user, amount, order.getId());
 		}
 		else
 		{
