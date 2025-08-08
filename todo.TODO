@@ -1,1 +1,3 @@
-Make password mandatory during signup
+Make password mandatory during signup X
+Currently fetching coin by ID saves it to db, but fetching all coins doesn't fix that
+
