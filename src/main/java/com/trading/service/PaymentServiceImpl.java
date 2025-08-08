@@ -129,7 +129,7 @@ public class PaymentServiceImpl implements PaymentService
 			 paymentLinkRequest.put("reminder_enable", true);
 			 
 			 //set the callback URL and method
-			 paymentLinkRequest.put("callback_url", "http://localhost:8080/api/wallet?order_id=" + orderId);
+			 paymentLinkRequest.put("callback_url", "http://localhost:8080/api/wallet/deposit?order_id=" + orderId);
 			 paymentLinkRequest.put("callback_method", "get");
 			 
 			 PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);

@@ -34,7 +34,7 @@ public class WalletController
 	private PaymentService paymentService;
 	
 	
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<Wallet> getUserWallet(@RequestHeader("Authorization") String jwt) throws Exception
 	{
 		User user = userService.findUserByProfileByJwt(jwt);
