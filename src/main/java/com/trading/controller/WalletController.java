@@ -15,6 +15,8 @@ import com.trading.service.PaymentService;
 import com.trading.service.UserService;
 import com.trading.service.WalletService;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/wallet")
 public class WalletController
@@ -93,6 +95,10 @@ public class WalletController
 		
 //		PaymentResponse response = new PaymentResponse();
 //		response.setPayment_url("Deposite success");
+
+		if(wallet.getBalance()==null){
+			wallet.setBalance(BigDecimal.valueOf(0));
+		}
 
 		if (status)
 		{
