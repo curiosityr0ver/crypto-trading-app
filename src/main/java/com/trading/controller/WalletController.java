@@ -3,13 +3,7 @@ package com.trading.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.trading.entities.Order;
 import com.trading.entities.PaymentOrder;
@@ -22,7 +16,7 @@ import com.trading.service.UserService;
 import com.trading.service.WalletService;
 
 @RestController
-//@RequestMapping("/api/wallet")
+@RequestMapping("/api/wallet")
 public class WalletController
 {
 	@Autowired
@@ -38,7 +32,7 @@ public class WalletController
 	private PaymentService paymentService;
 	
 	
-	@GetMapping("/api/wallet")
+	@GetMapping("/")
 	public ResponseEntity<Wallet> getUserWallet(@RequestHeader("Authorization") String jwt) throws Exception
 	{
 		User user = userService.findUserByProfileByJwt(jwt);
@@ -49,10 +43,10 @@ public class WalletController
 	}
 	
 	
-	@PutMapping("/api/wallet/{walletId}/transfer")
-	public ResponseEntity<Wallet> wallletToWalletTransfer(@RequestHeader("Authorization") String jwt,
-												@PathVariable	Long walletId,
-												@RequestBody WalletTransation req) throws Exception
+	@PutMapping("/{walletId}/transfer")
+	public ResponseEntity<Wallet> walletToWalletTransfer(@RequestHeader("Authorization") String jwt,
+														 @PathVariable	Long walletId,
+														 @RequestBody WalletTransation req) throws Exception
 	{
 		User senderUser = userService.findUserByProfileByJwt(jwt);
 		
@@ -67,7 +61,7 @@ public class WalletController
 	}
 
 	
-	@PutMapping("/api/wallet/order/{orderId}/pay")
+	@PutMapping("/order/{orderId}/pay")
 	public ResponseEntity<Wallet> payOrderPayment(@RequestHeader("Authorization") String jwt,
 												@PathVariable	Long orderId
 												)  throws Exception
@@ -82,7 +76,7 @@ public class WalletController
 	}
 	
 	
-	@PutMapping("/api/wallet/deposit")
+	@PutMapping("/deposit")
 	public ResponseEntity<Wallet> addBalanceToWallet(@RequestHeader("Authorization") String jwt,
 												@RequestParam("order_id") Long orderId,
 												@RequestParam("payment_id") String paymentId
