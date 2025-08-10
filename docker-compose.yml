@@ -5,15 +5,18 @@ services:
     image: mysql:8.0
     container_name: mysql-db
     restart: always
-    environment:
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypass
-      MYSQL_ROOT_PASSWORD: rootpass
+    env_file:
+      - .env.docker
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD}" ]
+
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   app:
     build: .
@@ -22,12 +25,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
-      SPRING_DATASOURCE_USERNAME: myuser
-      SPRING_DATASOURCE_PASSWORD: mypass
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env.docker
 
 volumes:
   mysql_data:
