@@ -9,7 +9,7 @@ public class HomeController
 	@GetMapping
 	public String home()
 	{
-		return "Welcome to treading plateform";
+		return "Welcome to treading platform";
 	}
 	
 	@GetMapping("/api")
