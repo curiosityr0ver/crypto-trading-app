@@ -9,10 +9,10 @@
 		<version>3.4.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.aniket</groupId>
+	<groupId>com.ishu</groupId>
 	<artifactId>treading</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>treading</name>
+	<name>trading-app</name>
 	<description>user can tread on crypto</description>
 	<url />
 	<licenses>

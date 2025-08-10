@@ -1,27 +1,12 @@
-# -------- BUILD STAGE --------
-FROM maven:3.8.8-eclipse-temurin-17 AS builder
+# Stage 1: Build the application
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
-
-# Cache dependencies
 COPY pom.xml .
-RUN mvn -B -DskipTests dependency:go-offline
-
-# Copy source and build
 COPY src ./src
-RUN mvn -B -DskipTests package
+RUN mvn clean package -DskipTests
 
-# -------- RUNTIME STAGE --------
+# Stage 2: Run the application
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-
-# Copy built jar
-COPY --from=builder /app/target/*.jar app.jar
-
-# Optional: JVM options
-ENV JAVA_OPTS="-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
-
-# Expose port
-EXPOSE 8080
-
-# Run app
-ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app.jar"]
+COPY --from=builder /app/target/*SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
