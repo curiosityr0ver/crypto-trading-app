@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/payment-details")
 public class PaymentDetailsController 
 {
 	@Autowired
@@ -27,7 +27,7 @@ public class PaymentDetailsController
 	private PaymentDetailsService paymentDetailsService;
 	
 	
-	@PostMapping("/payment-details")
+	@PostMapping()
 	public ResponseEntity<PaymentDetails> addPaymentDetails(
 								@RequestBody PaymentDetails paymentDetailsRequest,
 								@RequestHeader("Authorization") String jwt) throws Exception
@@ -47,7 +47,7 @@ public class PaymentDetailsController
 	}
 	
 	
-	@GetMapping("/payment-details")
+	@GetMapping()
 	public ResponseEntity<PaymentDetails> getUserPaymentDetails(@RequestHeader("Authorization") String jwt) throws Exception 
 	{
 		User user = userService.findUserByProfileByJwt(jwt);
