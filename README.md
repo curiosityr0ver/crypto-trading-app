@@ -194,7 +194,7 @@ The application uses **Spring Boot's automatic DDL generation** feature. No manu
 
 ### Entity Relationship Diagram
 
-![Database ER Diagram](images/er-diagram.png)
+![Database ER Diagram](assets/er_diagram_trading_app.png)
 
 *The ER diagram illustrates the relationships between core entities: User, Wallet, Transaction, Portfolio, Cryptocurrency, and their associated tables for the cryptocurrency management system.*
 
