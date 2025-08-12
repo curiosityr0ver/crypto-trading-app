@@ -83,16 +83,16 @@ cryptocurrency-management-app/
 2. **Configure your .env.docker file**
    ```env
    # Database Configuration
-   MYSQL_DATABASE=yt_trading
-   MYSQL_ROOT_PASSWORD=admin
-   DB_URL=jdbc:mysql://mysql:3306/yt_trading
-   DB_USERNAME=root
-   DB_PASSWORD=admin
+   MYSQL_DATABASE=
+   MYSQL_ROOT_PASSWORD=
+   DB_URL=
+   DB_USERNAME=
+   DB_PASSWORD=
    
    # Payment Gateway Keys
-   RAZORPAY_API_KEY=rzp_test_neNAjOhg0kQ8Vw
-   RAZORPAY_API_SECRET=SNCgCIaPR9voEMhegZXPDopC
-   STRIPE_API_KEY=sk_test_...
+   RAZORPAY_API_KEY=
+   RAZORPAY_API_SECRET=
+   STRIPE_API_KEY=
    
    # External API Keys (Add your keys)
    COINGECKO_API_KEY=your_coingecko_api_key
