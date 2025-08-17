@@ -9,3 +9,8 @@ in wallet to wallet transfer, check if wallet source and destination is same
 in razorpay callback, use GET or POST, as PUT is not supported
 
 Implement Transaction Service
+
+Implement mail service for 2FA mail
+
+Implement checks for env vars before booting up application
+
