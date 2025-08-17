@@ -1,32 +1,25 @@
+version: '3.8'
+
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-db
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD","mysqladmin","ping","-h","localhost","-p${MYSQL_ROOT_PASSWORD}" ]
-
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
   app:
-    image: curiosityr0ver/crypto-trading-app:latest
-    container_name: springboot-app
-    restart: always
+    build: .
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
+    # This will load environment variables from .env.docker for the 'app' service
     env_file:
-      - .env
+      - .env.docker
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    # This will load environment variables from .env.docker for the 'mysql' service
+    env_file:
+      - .env.docker
+    volumes:
+      - mysql-data:/var/lib/mysql
 
 volumes:
-  mysql_data:
+  mysql-data:
