@@ -12,7 +12,7 @@ services:
   mysql:
     image: mysql:latest
     ports:
-      - "3306:3306"
+      - "3307:3306"
     # This will load environment variables from .env.docker for the 'mysql' service
     env_file:
       - .env.docker
