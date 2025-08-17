@@ -14,3 +14,4 @@ Implement mail service for 2FA mail
 
 Implement checks for env vars before booting up application
 
+Separate MySQL deployment on GCP
